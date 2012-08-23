@@ -353,6 +353,16 @@ class SearchManager(models.Manager):
             self.fields_to_index, splitter=self.splitter, indexer=self.indexer,
             language=self.language, relation_index=False))
 
+    def catch_up(self):
+        if self._relation_index_model:
+            rel_index_pks = map(lambda row: row.id,
+                                self._relation_index_model.objects.all())
+            pk_fld = self.model._meta.pk.name
+
+            for obj in self.model.objects.all():
+                if getattr(obj, pk_fld) not in rel_index_pks:
+                    obj.save()
+
     def get_index_values(self, parent):
         filters = []
         for filter in self.filters.keys():

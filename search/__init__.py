@@ -7,7 +7,7 @@ def autodiscover():
 
 def register(model, fields_to_index, search_index='search_index',
     indexer=None, splitter=default_splitter, relation_index=True, integrate='*',
-    filters={}, language=site_language, **kwargs):
+    filters={}, language=site_language, catch_up = False, **kwargs):
 
     """
     Add a search manager to the model.
@@ -24,3 +24,7 @@ def register(model, fields_to_index, search_index='search_index',
         splitter, relation_index, integrate, filters, language, **kwargs))
 
     install_index_model(model)
+
+    if catch_up:
+        getattr(model, search_index).catch_up()
+    
