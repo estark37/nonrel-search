@@ -355,9 +355,9 @@ class SearchManager(models.Manager):
 
     def catch_up(self):
         if self._relation_index_model:
-            rel_index_pks = map(lambda row: row.id,
-                                self._relation_index_model.objects.all())
             pk_fld = self.model._meta.pk.name
+            rel_index_pks = map(lambda row: getattr(row, pk_fld),
+                                self._relation_index_model.objects.all())
 
             for obj in self.model.objects.all():
                 if getattr(obj, pk_fld) not in rel_index_pks:
